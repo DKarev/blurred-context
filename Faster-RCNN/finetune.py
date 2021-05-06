@@ -19,18 +19,17 @@ from utils.trainer import COCOTrainer, COCOGroundTruthBoxesTrainer
 parser = argparse.ArgumentParser()
 parser.add_argument("--outdir", type=str, default="output/{date:%Y-%m-%d_%H%M}".format(date=datetime.datetime.now()), help="Path to output folder (will be created if it does not exist).")
 parser.add_argument("--resume", action='store_true', default=False, help="Set to resume from last checkpoint in outdir.")
-parser.add_argument("--annotations", type=str, help="Path to COCO-style annotations file.")
-parser.add_argument("--imagedir", type=str, help="Path to images folder w.r.t. which filenames are specified in the annotations.")
-parser.add_argument("--num_classes", type=int, help="Number of classes.")
+parser.add_argument("--annotations", type=str, default="/home/dimitar/train_annotations.json", help="Path to COCO-style annotations file.")
+parser.add_argument("--imagedir", type=str, default="/home/dimitar/neuro-project/Datasets/MSCOCO/trainColor_blurimg_4",  help="Path to images folder w.r.t. which filenames are specified in the annotations.")
+parser.add_argument("--num_classes", type=int, default=55, help="Number of classes.")
 
-parser.add_argument("--test_annotations", type=str, help="Path to COCO-style annotations file for model evaluation.")
-parser.add_argument("--test_imagedir", type=str, help="Path to images folder w.r.t. which filenames are specified in the annotations for model evaluation.")
-parser.add_argument("--test_frequency", type=int, default=5000, help="Evaluate model on test data every __ iterations.")
+parser.add_argument("--test_annotations", type=str, default='/home/dimitar/test_annotations.json', help="Path to COCO-style annotations file for model evaluation.")
+parser.add_argument("--test_imagedir", type=str, default='/home/mengmi/Projects/Proj_context2/Matlab/Stimulus/keyframe_expH', help="Path to images folder w.r.t. which filenames are specified in the annotations for model evaluation.")
+parser.add_argument("--test_frequency", type=int, default=30000, help="Evaluate model on test data every __ iterations.")
 
-parser.add_argument("--iters", type=int, default=50000, help="Number of iterations to train.")
-parser.add_argument("--save_frequency", type=int, default=5000, help="Save model checkpoint every __ iterations.")
+parser.add_argument("--iters", type=int, default=300000, help="Number of iterations to train.")
+parser.add_argument("--save_frequency", type=int, default=30000, help="Save model checkpoint every __ iterations.")
 args = parser.parse_args()
-
 
 # Register datasets
 register_coco_instances("train", {}, args.annotations, args.imagedir)
@@ -50,7 +49,7 @@ cfg.SOLVER.BASE_LR = 0.00025
 cfg.SOLVER.CHECKPOINT_PERIOD = args.save_frequency
 cfg.SOLVER.MAX_ITER = args.iters # Note that when traininig is resumed the iteration count will resume as well, so increase the number of iterations to train further. 
 cfg.TEST.EVAL_PERIOD = args.test_frequency
-cfg.MODEL.ROI_HEADS.NUM_CLASSES = 15
+cfg.MODEL.ROI_HEADS.NUM_CLASSES = 55
 
 # save config
 pathlib.Path(cfg.OUTPUT_DIR).mkdir(exist_ok=True, parents=True)

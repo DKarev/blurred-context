@@ -89,48 +89,22 @@ def test_recognition(model_yaml, checkpoint, dataset, annotations, imagedir, out
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_yaml", type=str, default="output/model.yaml", help="Path to model config file in yaml format.")
-    parser.add_argument("--checkpoint", type=str, default="output/model_final.pth", help="Path to model checkpoint.")
+    parser.add_argument("--model_yaml", type=str, help="Path to model config file in yaml format.")
+    parser.add_argument("--checkpoint", type=str, help="Path to model checkpoint.")
     parser.add_argument("--dataset", type=str, default="COCOSTUFF_COMPATIBLE" ,help="Dataset name or name of a predefined datsets: COCOSTUFF_UNREL_COMPATIBLE, COCOSTUFF_VIRTUALHOME_COMPATIBLE, COCOSTUFF, UNREL.")
     parser.add_argument("--annotations", type=str, help="Path to COCO-style annotations file. Not required if predefined dataset is used.")
     parser.add_argument("--imagedir", type=str, help="Path to images folder. Not required if predefined dataset is used.")
     parser.add_argument("--outdir", type=str, default="output", help="Path to output folder (will be created if it does not exist). Set None to use output directory from model config.")
     parser.add_argument("--use_rpn", action='store_true', default=False, help="If set, the region proposal network is used instead of ground truth bounding boxes.")
-    parser.add_argument("--record_individual_scores", action='store_true', default=False, help="If set, will log for each individual annotion how it was predicted and if the prediction was correct")
+    parser.add_argument("--record_individual_scores", action='store_true', default=True, help="If set, will log for each individual annotion how it was predicted and if the prediction was correct")
     args = parser.parse_args()
 
     # pre-set datasets for convenience
-    if args.dataset == "COCOSTUFF_UNREL_COMPATIBLE": # COCOstuff restricted to classes overlapping with UnRel
-        args.dataset = "COCOstuff_UnRel_compatible"
-        args.annotations = "/media/data/philipp_data/COCOstuff/annotations_UnRel_compatible/val.json"
-        args.imagedir = "/media/data/philipp_data/COCOstuff/images/val"
-    elif args.dataset =="COCOSTUFF_VIRTUALHOME_COMPATIBLE":
-        args.dataset = "COCOstuff_virtualhome_compatible"
-        args.annotations = "/media/data/philipp_data/COCOstuff/annotations_virtualhome_compatible/val.json"
-        args.imagedir = "/media/data/philipp_data/COCOstuff/images/val"
-    elif args.dataset == "COCOSTUFF":
-        args.dataset = "COCOstuff"
-        args.annotations = "/media/data/philipp_data/COCOstuff/annotations/val.json"
-        args.imagedir = "/media/data/philipp_data/COCOstuff/images/val"
-    elif args.dataset == "UNREL":
-        args.dataset = "UnRel"
-        args.annotations = "/media/data/philipp_data/UnRel_test/annotations/annotations.json"
-        args.imagedir = "/media/data/philipp_data/UnRel_test/images"
-    elif args.dataset == "VIRTUALHOME":
-        args.dataset = "virtualhome"
-        args.annotations = "/media/data/philipp_data/virtualhome/virtualhome_IC/annotations.json"
-        args.imagedir = "/media/data/philipp_data/virtualhome/virtualhome_IC"
-    elif args.dataset == "VIRTUALHOME_GRAVITY":
-        args.dataset = "virtualhome_gravity"
-        args.annotations = "/media/data/philipp_data/virtualhome/virtualhome_gravity/annotations.json"
-        args.imagedir = "/media/data/philipp_data/virtualhome/virtualhome_gravity"
-    elif args.dataset == "VIRTUALHOME_ANOMALY":
-        args.dataset = "virtualhome_anomaly"
-        args.annotations = "/media/data/philipp_data/virtualhome/virtualhome_anomaly/annotations.json"
-        args.imagedir = "/media/data/philipp_data/virtualhome/virtualhome_anomaly"
-    elif args.dataset == "VIRTUALHOME_NO_CONTEXT":
-        args.dataset = "virtualhome_no_context"
-        args.annotations = "/media/data/philipp_data/virtualhome/virtualhome_no_context/annotations.json"
-        args.imagedir = "/media/data/philipp_data/virtualhome/virtualhome_no_context/images"
+    if args.dataset == "CONGRUENT_INCONGRUENT_EXP_J":
+        args.dataset = "congruent_incongruent_exp_j"
+        args.annotations = "/home/dimitar/experiments_I_and_J/annotations/test_annotations_exp_J.json"
+    elif args.dataset == "CONGRUENT_INCONGRUENT_EXP_I":
+        args.dataset = "congruent_incongruent_exp_i"
+        args.annotations = "/home/dimitar/experiments_I_and_J/annotations/test_annotations_exp_I.json"
 
     test_recognition(args.model_yaml, args.checkpoint, args.dataset, args.annotations, args.imagedir, args.outdir, args.use_rpn, record_individual_scores=args.record_individual_scores)
